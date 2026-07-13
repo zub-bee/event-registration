@@ -189,6 +189,14 @@ th {
   margin-top: 16px;
 }
 
+#result {
+  margin-top: 16px;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  display: none;
+}
+
 .scan-result {
   margin-top: 16px;
   padding: 20px;
@@ -211,36 +219,4 @@ th {
 .scan-result.invalid {
   background: var(--hero-bg);
   color: #991b1b;
-}
-
-/* Style the modal container box */
-dialog {
-  padding: 24px;
-  border: none;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  max-width: 500px;
-  width: 90%;
-}
-
-/* Header layout to align title and close button */
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-/* Close button styling */
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-/* Semi-transparent dark background overlay */
-dialog::backdrop {
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(2px); /* Optional blur effect */
 }

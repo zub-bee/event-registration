@@ -7,7 +7,7 @@ const router = express.Router();
 // POST /api/checkin - { token }  (token = the string encoded in the QR code)
 // Requires staff to be logged in.
 router.post("/", requireAuth, (req, res) => {
-  const { token } = req.body;
+  const { token, confirm = false } = req.body;
 
   if (!token) {
     return res.status(400).json({ error: "Missing QR token" });
@@ -27,15 +27,28 @@ router.post("/", requireAuth, (req, res) => {
       result: "already_used",
       message: `Already scanned at ${registration.usedAt}`,
       fullName: registration.fullName,
+      email: registration.email,
+      usedAt: registration.usedAt,
+    });
+  }
+
+  if (!confirm) {
+    return res.json({
+      result: "valid",
+      message: "Ticket is valid",
+      fullName: registration.fullName,
+      email: registration.email,
     });
   }
 
   const updated = db.markUsed(token);
 
   res.json({
-    result: "valid",
+    result: "checked_in",
     message: "Check-in successful",
     fullName: updated.fullName,
+    email: updated.email,
+    usedAt: updated.usedAt,
   });
 });
 
