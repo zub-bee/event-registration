@@ -243,7 +243,7 @@
         qr = new Html5Qrcode("reader");
         qr.start(
           { facingMode: "environment" },
-          { fps: 10, qrbox: 450 },
+          { fps: 10, qrbox: 250 },
           onScanSuccess,
         )
           .then(() => {

@@ -83,7 +83,7 @@
           }
 
           localStorage.setItem("staffToken", data.token);
-          msg.innerHTML = `<div class="message success">Logged in! Choose Scanner or Admin above.</div>`;
+          window.location.href = "admin.html";
         } catch (err) {
           msg.innerHTML = `<div class="message error">Network error — please try again.</div>`;
         }
