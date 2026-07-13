@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Staff Login</title>
+    <link rel="stylesheet" href="register.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="register-shell">
+      <div class="register-layout">
+        <section class="hero" aria-labelledby="registerTitle">
+          <h1 id="registerTitle">Login as an admin</h1>
+          <p id="spotsText" class="status">
+            Checking total registrations so far…
+          </p>
+        </section>
+
+        <section aria-label="Registration form">
+          <form id="regForm" class="form-stack">
+            <div class="stack-card">
+              <input
+                class="stack-field"
+                type="text"
+                id="username"
+                name="fullName"
+                placeholder="Jane Doe"
+                autocomplete="name"
+                required
+              />
+              <p class="stack-label">Username</p>
+              <label class="visually-hidden" for="fullName"
+                >Your Full Name</label
+              >
+            </div>
+
+            <div class="stack-card">
+              <input
+                class="stack-field"
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Password"
+                required
+              />
+              <p class="stack-label">Your admin password</p>
+              <label class="visually-hidden" for="password">Password</label>
+            </div>
+
+            <button id="submitBtn" class="stack-submit" type="submit">
+              <p class="stack-label" style="font-size: 1.125rem">Sign in</p>
+              <span class="stack-value"
+                >View registrations so far and scan invites</span
+              >
+            </button>
+          </form>
+          <div id="msg" aria-live="polite"></div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById("regForm");
+      const msg = document.getElementById("msg");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        try {
+          const res = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+          });
+          const data = await res.json();
+
+          if (!res.ok) {
+            msg.innerHTML = `<div class="message error">${data.error}</div>`;
+            return;
+          }
+
+          localStorage.setItem("staffToken", data.token);
+          msg.innerHTML = `<div class="message success">Logged in! Choose Scanner or Admin above.</div>`;
+        } catch (err) {
+          msg.innerHTML = `<div class="message error">Network error — please try again.</div>`;
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "event-registration",
+  "version": "1.0.0",
+  "description": "QR-code based event registration and check-in system",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "seed": "node src/seed.js"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.3.2",
+    "@tailwindcss/postcss": "^4.3.2",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.14",
+    "postcss": "^8.5.16",
+    "qrcode": "^1.5.3",
+    "tailwindcss": "^4.3.2",
+    "uuid": "^9.0.1"
+  }
+}

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div>
+      <h1 class="hero-section__title">Admin Dashboard</h1>
+      <p style="margin-top: 16px">
+        <a href="login.html" style="margin: 10px"> Logout </a>
+        <a
+          href="scanner.html"
+          class="button-on-dark button-on-dark--dark-subtle"
+        >
+          <span class="button-on-dark__label">Scan QR codes</span>
+        </a>
+      </p>
+      <p id="summary">Loading…</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Registered At</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+
+    <script>
+      const token = localStorage.getItem("staffToken");
+      if (!token) {
+        window.location.href = "login.html";
+      }
+
+      async function load() {
+        const res = await fetch("/api/admin/registrations", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (res.status === 401) {
+          window.location.href = "login.html";
+          return;
+        }
+
+        const data = await res.json();
+        document.getElementById("summary").textContent =
+          `${data.total} / ${data.capacity} registered — ${data.checkedIn} checked in`;
+
+        const rows = data.registrations
+          .map(
+            (r) => `
+        <tr>
+          <td>${r.fullName}</td>
+          <td>${r.email}</td>
+          <td><span class="badge ${r.status}">${r.status === "used" ? "Checked in" : "Not yet"}</span></td>
+          <td>${new Date(r.createdAt).toLocaleString()}</td>
+        </tr>
+      `,
+          )
+          .join("");
+
+        document.getElementById("rows").innerHTML = rows;
+      }
+
+      load();
+      setInterval(load, 5000); // auto-refresh every 5s
+    </script>
+  </body>
+</html>

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Event Registration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="register.css" />
+    <!-- <link rel="stylesheet" href="./dist/output.css" /> -->
+  </head>
+  <body>
+    <div class="register-shell">
+      <div class="register-layout">
+        <section class="hero" aria-labelledby="registerTitle">
+          <h1 id="registerTitle">Register For The Induction Ceremony</h1>
+          <p id="spotsText" class="status">Checking availability…</p>
+        </section>
+
+        <section aria-label="Registration form">
+          <form id="regForm" class="form-stack">
+            <div class="stack-card">
+              <input
+                class="stack-field"
+                type="text"
+                id="fullName"
+                name="fullName"
+                placeholder="Jane Doe"
+                autocomplete="name"
+                required
+              />
+              <p class="stack-label">Your full name</p>
+              <label class="visually-hidden" for="fullName"
+                >Your Full Name</label
+              >
+            </div>
+
+            <div class="stack-card">
+              <input
+                class="stack-field"
+                type="email"
+                id="email"
+                name="email"
+                placeholder="email@example.com"
+                autocomplete="email"
+                required
+              />
+              <p class="stack-label">
+                Your QR code will be sent to this address
+              </p>
+              <label class="visually-hidden" for="email">Email Address</label>
+            </div>
+
+            <button id="submitBtn" class="stack-submit" type="submit">
+              <p class="stack-label" style="font-size: 1.125rem">
+                Get Your Invite
+              </p>
+              <span class="stack-value">Check your email address</span>
+            </button>
+          </form>
+          <div id="msg" aria-live="polite"></div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById("regForm");
+      const submitBtn = document.getElementById("submitBtn");
+      const spotsText = document.getElementById("spotsText");
+      const msg = document.getElementById("msg");
+
+      function showMessage(text, type) {
+        msg.innerHTML = `<div class="message ${type}">${text}</div>`;
+      }
+
+      async function loadStatus() {
+        try {
+          const res = await fetch("/api/status");
+          const data = await res.json();
+          if (data.closed) {
+            spotsText.textContent = `Registration is closed - all ${data.capacity} spots are filled.`;
+            form.style.display = "none";
+          } else {
+            spotsText.textContent = `${data.remaining} of ${data.capacity} spots remaining.`;
+          }
+        } catch (err) {
+          spotsText.textContent =
+            "Availability details are temporarily unavailable.";
+        }
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Registering…";
+        msg.innerHTML = "";
+
+        const fullName = document.getElementById("fullName").value;
+        const email = document.getElementById("email").value;
+
+        try {
+          const res = await fetch("/api/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ fullName, email }),
+          });
+          const data = await res.json();
+
+          if (!res.ok) {
+            showMessage(data.error || "Something went wrong.", "error");
+            submitBtn.disabled = false;
+            submitBtn.querySelector(".stack-label").textContent =
+              "Get Your Invite";
+            submitBtn.querySelector(".stack-value").textContent =
+              "Check your email address";
+            loadStatus();
+            return;
+          }
+
+          window.location.href = "success.html";
+        } catch (err) {
+          showMessage("Network error — please try again.", "error");
+          submitBtn.disabled = false;
+          submitBtn.querySelector(".stack-label").textContent =
+            "Get Your Invite";
+          submitBtn.querySelector(".stack-value").textContent =
+            "Check your email address";
+        }
+      });
+
+      loadStatus();
+    </script>
+  </body>
+</html>

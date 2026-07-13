@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scan Tickets</title>
+    <link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  </head>
+  <body>
+    <div class="card">
+      <h1 class="hero-section__title">Scan Ticket</h1>
+      <p style="margin-top: 16px">
+        <a href="login.html" style="margin: 10px"> Logout </a>
+        <a href="admin.html" class="button-on-dark button-on-dark--dark-subtle">
+          <span class="button-on-dark__label">Addmin Dashboard</span>
+        </a>
+      </p>
+      <p id="status">Starting camera…</p>
+      <div id="reader"></div>
+      <!-- The Modal Dialog -->
+      <dialog id="resultModal">
+        <div class="modal-header">
+          <h2>Ticket Info</h2>
+          <!-- Close Button -->
+          <button id="closeModalBtn" class="close-btn">x&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="result"></div>
+          <p>
+            This is a modern modal built with native HTML, CSS, and a tiny bit
+            of JavaScript for opening/closing.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button
+            id="checkinBtn"
+            class="button-on-dark button-on-dark--dark-subtle"
+          >
+            Check In
+          </button>
+        </div>
+      </dialog>
+    </div>
+
+    <script>
+      const token = localStorage.getItem("staffToken");
+      if (!token) {
+        window.location.href = "login.html";
+      }
+
+      const statusEl = document.getElementById("status");
+      const resultModal = document.getElementById("resultModal");
+      const closeBtn = document.getElementById("closeModalBtn");
+      const resultEl = document.getElementById("result");
+      const checkinBtn = document.getElementById("checkinBtn");
+
+      let scanning = true; // simple lock so we don't fire multiple requests per scan
+
+      async function onScanSuccess(decodedText) {
+        if (!scanning) return;
+        scanning = false;
+        resultEl.textContent = "Checking…";
+
+        if (scanning == false) {
+          resultModal.showModal();
+        }
+
+        // Close the modal
+        closeBtn.addEventListener("click", () => {
+          resultModal.close();
+        });
+
+        // Optional: Close modal if user clicks on the backdrop overlay area
+        resultModal.addEventListener("click", (e) => {
+          if (e.target === resultModal) {
+            modal.close();
+          }
+        });
+
+        try {
+          const res = await fetch("/api/checkin", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ token: decodedText }),
+          });
+
+          if (res.status === 401) {
+            window.location.href = "login.html";
+            return;
+          }
+
+          const data = await res.json();
+          showResult(data);
+        } catch (err) {
+          resultEl.innerHTML = ``;
+          resultEl.innerHTML = `<div class="scan-result invalid">Network error please try again</div>`;
+        }
+      }
+
+      // resultEl.textContent = "Point camera at next QR code";
+      // Small delay before allowing another scan, so the same code
+      // isn't accidentally scanned twice in a row.
+      setTimeout(() => {
+        scanning = true;
+      }, 5000);
+
+      // Checkin button click handler
+      checkinBtn.addEventListener("click", async () => {
+        modal.close();
+      });
+
+      function showResult(data) {
+        resultEl.innerHTML = ``;
+        if (data.result === "valid") {
+          resultEl.innerHTML = `<div class="scan-result valid">✅ Valid — ${data.fullName}</div>`;
+        } else if (data.result === "already_used") {
+          resultEl.innerHTML = `<div class="scan-result already_used">❌ Already scanned — ${data.fullName}</div>`;
+          checkinBtn.style.display = "none";
+        } else {
+          resultEl.innerHTML = `<div class="scan-result invalid">❌ Invalid QR code</div>`;
+          checkinBtn.style.display = "none";
+        }
+      }
+
+      const qr = new Html5Qrcode("reader");
+      qr.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: 250 },
+        onScanSuccess,
+      )
+        .then(() => {
+          statusEl.textContent = "Point camera at a QR code";
+        })
+        .catch((err) => {
+          statusEl.textContent = "Could not start camera: " + err;
+        });
+    </script>
+  </body>
+</html>

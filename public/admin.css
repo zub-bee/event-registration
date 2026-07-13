@@ -1,0 +1,246 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --hero-bg: #a0f1bd;
+  --hero-ink: #2e4f21;
+  --hero-ink-soft: #506349;
+  --hero-panel: #f9f9f9;
+  --hero-panel-dark: #2e4f21;
+  --hero-panel-dark-hover: #27481a;
+  --hero-panel-dark-hover-ink: #f9f9f9;
+  --hero-radius-pill: 51.5746px;
+  --hero-font:
+    "Work Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+}
+
+body {
+  font-family: var(--hero-font);
+  background: var(--hero-bg);
+  margin: 10px;
+  padding: 24px;
+  color: var(--hero-ink);
+}
+
+h1.hero-section__title {
+  font-family: "Times New Roman", Times, serif;
+  margin: 32px 0;
+}
+
+button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: #a0aec0;
+  cursor: not-allowed;
+}
+
+.message {
+  margin-top: 16px;
+  font-size: 14px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.message.error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.message.success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.message.info {
+  background: var(--hero-bg);
+  color: var(--hero-panel-dark-hover-ink);
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+td,
+th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+  color: var(--hero-ink);
+}
+
+tr {
+  background-color: rgba(var(--hero-panel-dark-hover), 0.5);
+  color: var(--hero-ink);
+}
+
+tr:hover {
+  background-color: var(--hero-panel-dark-hover);
+  color: #fff;
+}
+
+th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: var(--hero-panel-dark);
+  color: var(--hero-ink);
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--hero-ink-soft);
+}
+
+th {
+  background: #f9fafb;
+}
+
+/* Mobile responsive styles */
+@media screen and (max-width: 600px) {
+  /* Hide the traditional table header entirely */
+  table thead {
+    display: none;
+  }
+
+  /* Force table elements to stack vertically like blocks */
+  table,
+  table tbody,
+  table tr,
+  table th,
+  table td {
+    display: block;
+    width: 100%;
+  }
+
+  /* Turn each row into a distinct, spaced card */
+  table tr {
+    margin-bottom: 15px;
+    border: 1px solid var(--hero-ink-soft);
+  }
+
+  /* Align text right to leave space for labels on the left */
+  table td {
+    text-align: right;
+    padding-left: 0%; /* Pushes text to the left half */
+    position: relative;
+    border-bottom: 1px solid var(--hero-ink-soft);
+  }
+
+  /* Pull the HTML data-label values into existence using content pseudo-elements */
+  table td::before {
+    content: attr(data-label); /* Pulls text from HTML attribute */
+    position: absolute;
+    left: 12px;
+    width: 45%;
+    text-align: left;
+    font-weight: bold;
+  }
+
+  /* Clean up the final cell border */
+  table td:last-child {
+    border-bottom: 0;
+  }
+}
+
+.badge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge.used {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badge.unused {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.wide-card {
+  max-width: 800px;
+}
+
+#reader {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.scan-result {
+  margin-top: 16px;
+  padding: 20px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.scan-result.valid {
+  background: var(--hero-bg);
+  color: #166534;
+}
+
+.scan-result.already_used {
+  background: var(--hero-bg);
+  color: #991b1b;
+}
+
+.scan-result.invalid {
+  background: var(--hero-bg);
+  color: #991b1b;
+}
+
+/* Style the modal container box */
+dialog {
+  padding: 24px;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-width: 500px;
+  width: 90%;
+}
+
+/* Header layout to align title and close button */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+/* Close button styling */
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Semi-transparent dark background overlay */
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px); /* Optional blur effect */
+}
