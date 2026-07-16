@@ -43,7 +43,7 @@ function getRegistrationCount() {
 function findByEmail(email) {
   const db = readDB();
   return db.registrations.find(
-    (r) => r.email.toLowerCase() === email.toLowerCase()
+    (r) => r.email.toLowerCase() === email.toLowerCase(),
   );
 }
 
@@ -74,7 +74,7 @@ function markUsed(token) {
 function findStaffByUsername(username) {
   const db = readDB();
   return db.staffUsers.find(
-    (u) => u.username.toLowerCase() === username.toLowerCase()
+    (u) => u.username.toLowerCase() === username.toLowerCase(),
   );
 }
 

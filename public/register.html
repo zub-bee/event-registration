@@ -18,7 +18,6 @@
       <div class="register-layout">
         <section class="hero" aria-labelledby="registerTitle">
           <h1 id="registerTitle">Register For The Induction Ceremony</h1>
-          <p id="spotsText" class="status">Checking availability…</p>
         </section>
 
         <section aria-label="Registration form">
@@ -70,27 +69,10 @@
     <script>
       const form = document.getElementById("regForm");
       const submitBtn = document.getElementById("submitBtn");
-      const spotsText = document.getElementById("spotsText");
       const msg = document.getElementById("msg");
 
       function showMessage(text, type) {
         msg.innerHTML = `<div class="message ${type}">${text}</div>`;
-      }
-
-      async function loadStatus() {
-        try {
-          const res = await fetch("/api/status");
-          const data = await res.json();
-          if (data.closed) {
-            spotsText.textContent = `Registration is closed - all ${data.capacity} spots are filled.`;
-            form.style.display = "none";
-          } else {
-            spotsText.textContent = `${data.remaining} of ${data.capacity} spots remaining.`;
-          }
-        } catch (err) {
-          spotsText.textContent =
-            "Availability details are temporarily unavailable.";
-        }
       }
 
       form.addEventListener("submit", async (e) => {
@@ -117,7 +99,6 @@
               "Get Your Invite";
             submitBtn.querySelector(".stack-value").textContent =
               "Check your email address";
-            loadStatus();
             return;
           }
 
@@ -131,8 +112,6 @@
             "Check your email address";
         }
       });
-
-      loadStatus();
     </script>
   </body>
 </html>
