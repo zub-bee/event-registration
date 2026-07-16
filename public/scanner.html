@@ -8,7 +8,17 @@
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <style>
       .badge {
-        margin: 15px;
+        margin: 30px;
+      }
+      .card {
+        align-self: center;
+        margin-left: 12px;
+      }
+      .btn {
+        margin-top: 30px;
+      }
+      h2 {
+        margin-bottom: 12px;
       }
     </style>
   </head>
@@ -18,20 +28,20 @@
         <a class="btn btn-ghost text-xl hero-section__title">Scan Tickets</a>
       </div>
       <div class="navbar-end">
-        <a
-          class="btn btn-primary"
-          style="margin-right: 20px"
-          href="scanner.html"
+        <a class="btn btn-primary" style="margin-right: 20px" href="admin.html"
           >Dashboard</a
         >
         <a class="btn" href="login.html">Logout</a>
       </div>
     </div>
     <div class="badge badge-accent" id="status">Loading…</div>
-    <div class="card bg-primary text-primary-content w-96" id="reader-div">
+    <div
+      class="card bg-base-100 text-primary-content card-xl shadow-sm w-96"
+      id="reader-div"
+    >
       <div class="card-body" id="reader"></div>
     </div>
-    <div class="card bg-primary text-primary-content w-96">
+    <div class="card bg-base-100 text-primary-content card-xl shadow-sm w-96">
       <div class="card-body" id="result"></div>
     </div>
 
@@ -139,6 +149,20 @@
 
           const data = await res.json();
           if (!res.ok) {
+            if (res.status === 409) {
+              setResultHtml(`
+                <h2 class="card-title">Oops!</h2>
+                <p>
+                  Checked in: ${escapeHtml(data.fullName)} (${escapeHtml(data.email || "no-email")})
+                </p>
+                <div class="card-actions justify-end">
+                  <button class="btn" id="closeResult">Scan Next</button>
+                </div>
+              `);
+              wireCloseButton();
+              return;
+            }
+
             setResultHtml(
               `<h2 class="card-title">Sorry!</h2>
               <p>
@@ -148,17 +172,6 @@
             wireCloseButton();
             return;
           }
-
-          setResultHtml(`
-            <h2 class="card-title">Oops!</h2>
-            <p>
-              Checked in: ${escapeHtml(data.fullName)} (${escapeHtml(data.email || "no-email")})
-            </p>
-            <div class="card-actions justify-end">
-              <button class="btn" id="closeResult">Scan Next</button>
-            </div>
-          `);
-          wireCloseButton();
         } catch (err) {
           setResultHtml(`
             <h2 class="card-title">Sorry!</h2>
@@ -166,7 +179,7 @@
               Network error while confirming check-in. Please try again.
             </p>
             <div class="card-actions justify-end">
-              <button class="btn" id="closeResult">Close</button>
+              <button class="btn btn-primary" id="closeResult">Close</button>
             </div>
           `);
           wireCloseButton();
@@ -186,7 +199,7 @@
             </p>
             <div class="card-actions justify-end">
               <button class="btn" id="closeResult">Close</button>
-              <button class="btn" id="confirmCheckin">Check In</button>
+              <button class="btn btn-primary" id="confirmCheckin">Check In</button>
             </div>
           `);
 
@@ -215,8 +228,7 @@
         setResultHtml(`
           <h2 class="card-title">Naahh! Invalid QR code</h2>
           <p>
-            This ticket is not recognized, click the button to check in. 
-            Click the close button if you change your mind.
+            This ticket is not recognized.
           </p>
           <div class="card-actions justify-end">
             <button class="btn" id="closeResult">Close</button>
@@ -294,7 +306,7 @@
         qr = new Html5Qrcode("reader");
         qr.start(
           { facingMode: "environment" },
-          { fps: 10, qrbox: 250 },
+          { fps: 10, qrbox: 150 },
           onScanSuccess,
         )
           .then(() => {

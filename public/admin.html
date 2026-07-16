@@ -8,7 +8,14 @@
     <!-- <link rel="stylesheet" href="style.css" /> -->
     <style>
       .badge {
-        margin: 15px;
+        margin: 30px;
+      }
+      .card {
+        align-self: center;
+        margin-left: 12px;
+      }
+      .btn {
+        margin-top: 30px;
       }
     </style>
   </head>
@@ -83,7 +90,7 @@
         <tr>
           <th>${count++}</th>
           <td>${r.fullName}</td>
-          <td><span class="status ${r.status === "used" ? "status-success" : "status-warning"}"></span>${r.status === "used" ? "--Checked in" : "--Invited"}</td>
+          <td><span class="status ${r.status === "used" ? "status-primary" : "status-secondary"} animate-ping"></span>${r.status === "used" ? "Checked in" : "Invited"}</td>
         </tr>
       `,
           )
