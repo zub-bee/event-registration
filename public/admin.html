@@ -4,13 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="admin.css" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="output.css" />
+    <!-- <link rel="stylesheet" href="style.css" /> -->
+    <style>
+      .badge {
+        margin: 15px;
+      }
+    </style>
   </head>
   <body>
     <div>
-      <h1 class="hero-section__title">Admin Dashboard</h1>
-      <p style="margin-top: 16px">
+      <!-- <p style="margin-top: 16px">
         <a href="login.html" style="margin: 10px"> Logout </a>
         <a
           href="scanner.html"
@@ -18,19 +22,38 @@
         >
           <span class="button-on-dark__label">Scan QR codes</span>
         </a>
-      </p>
-      <p id="summary">Loading…</p>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Status</th>
-            <th>Registered At</th>
-          </tr>
-        </thead>
-        <tbody id="rows"></tbody>
-      </table>
+      </p> -->
+      <div class="navbar bg-base-100 shadow-sm.flex">
+        <div class="navbar-start">
+          <a class="btn btn-ghost text-xl hero-section__title"
+            >Admin Dashboard</a
+          >
+        </div>
+        <div class="navbar-end">
+          <a
+            class="btn btn-primary"
+            style="margin-right: 20px"
+            href="scanner.html"
+            >Scan Invites</a
+          >
+          <a class="btn" href="login.html">Logout</a>
+        </div>
+      </div>
+      <div class="badge badge-accent" id="summary">Loading…</div>
+      <div
+        class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100"
+      >
+        <table class="table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Name</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
     </div>
 
     <script>
@@ -53,14 +76,14 @@
         document.getElementById("summary").textContent =
           `${data.total} / ${data.capacity} registered — ${data.checkedIn} checked in`;
 
+        let count = 1;
         const rows = data.registrations
           .map(
             (r) => `
         <tr>
+          <th>${count++}</th>
           <td>${r.fullName}</td>
-          <td>${r.email}</td>
-          <td><span class="badge ${r.status}">${r.status === "used" ? "Checked in" : "Not yet"}</span></td>
-          <td>${new Date(r.createdAt).toLocaleString()}</td>
+          <td><span class="status ${r.status === "used" ? "status-success" : "status-warning"}"></span>${r.status === "used" ? "--Checked in" : "--Invited"}</td>
         </tr>
       `,
           )

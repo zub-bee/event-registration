@@ -4,27 +4,36 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Scan Tickets</title>
-    <link rel="stylesheet" href="admin.css" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="output.css" />
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <style>
+      .badge {
+        margin: 15px;
+      }
+    </style>
   </head>
   <body>
-    <section>
-      <h1 class="hero-section__title">Scan Ticket</h1>
-      <p>
-        <a href="login.html" style="margin: 10px"> Logout </a>
-        <a href="admin.html" class="button-on-dark button-on-dark--dark-subtle">
-          <span class="button-on-dark__label">Admin Dashboard</span>
-        </a>
-      </p>
-    </section>
-    <section class="scanner-section">
-      <div id="reader-div">
-        <p id="status">Starting camera…</p>
-        <div id="reader"></div>
+    <div class="navbar bg-base-100 shadow-sm.flex">
+      <div class="navbar-start">
+        <a class="btn btn-ghost text-xl hero-section__title">Scan Tickets</a>
       </div>
-      <div id="result"></div>
-    </section>
+      <div class="navbar-end">
+        <a
+          class="btn btn-primary"
+          style="margin-right: 20px"
+          href="scanner.html"
+          >Dashboard</a
+        >
+        <a class="btn" href="login.html">Logout</a>
+      </div>
+    </div>
+    <div class="badge badge-accent" id="status">Loading…</div>
+    <div class="card bg-primary text-primary-content w-96" id="reader-div">
+      <div class="card-body" id="reader"></div>
+    </div>
+    <div class="card bg-primary text-primary-content w-96">
+      <div class="card-body" id="result"></div>
+    </div>
 
     <script>
       const token = localStorage.getItem("staffToken");
@@ -111,8 +120,13 @@
 
           if (res.status === 401) {
             setResultHtml(`
-              <div class="scan-result invalid">Your session expired. Please log in again.</div>
-              <button class="button-on-dark" id="goLogin">Log in</button>
+              <h2 class="card-title">Sorry!</h2>
+              <p>
+                Your session expired. Please log in again.
+              </p>
+              <div class="card-actions justify-end">
+                <button class="btn" id="goLogin">Log in</button>
+              </div>
             `);
             const loginBtn = document.getElementById("goLogin");
             if (loginBtn) {
@@ -126,23 +140,34 @@
           const data = await res.json();
           if (!res.ok) {
             setResultHtml(
-              `<div class="scan-result invalid">${escapeHtml(data.message || data.error || "Could not check in this ticket")}</div>`,
+              `<h2 class="card-title">Sorry!</h2>
+              <p>
+                ${escapeHtml(data.message || data.error || "Could not check in this ticket")}
+              </p>`,
             );
             wireCloseButton();
             return;
           }
 
           setResultHtml(`
-            <div class="scan-result valid">
+            <h2 class="card-title">Oops!</h2>
+            <p>
               Checked in: ${escapeHtml(data.fullName)} (${escapeHtml(data.email || "no-email")})
+            </p>
+            <div class="card-actions justify-end">
+              <button class="btn" id="closeResult">Scan Next</button>
             </div>
-            <button class="button-on-dark" id="closeResult">Scan Next</button>
           `);
           wireCloseButton();
         } catch (err) {
           setResultHtml(`
-            <div class="scan-result invalid">Network error while confirming check-in. Please try again.</div>
-            <button class="button-on-dark" id="closeResult">Close</button>
+            <h2 class="card-title">Sorry!</h2>
+            <p>
+              Network error while confirming check-in. Please try again.
+            </p>
+            <div class="card-actions justify-end">
+              <button class="btn" id="closeResult">Close</button>
+            </div>
           `);
           wireCloseButton();
         }
@@ -154,12 +179,15 @@
 
         if (data.result === "valid") {
           setResultHtml(`
-            <div class="scan-result valid">Valid ticket</div>
-            <p><strong>Name:</strong> ${fullName}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Status:</strong> Valid (ready to check in)</p>
-            <button class="button-on-dark" id="confirmCheckin">Check In</button>
-            <button class="button-on-dark button-on-dark--dark-subtle" id="closeResult">Close</button>
+            <h2 class="card-title">Success!</h2>
+            <p>
+              ${fullName}'s ticket is valid, click the button to check in. 
+              Click the close button if you change your mind.
+            </p>
+            <div class="card-actions justify-end">
+              <button class="btn" id="closeResult">Close</button>
+              <button class="btn" id="confirmCheckin">Check In</button>
+            </div>
           `);
 
           const checkinBtn = document.getElementById("confirmCheckin");
@@ -172,20 +200,27 @@
 
         if (data.result === "already_used") {
           setResultHtml(`
-            <div class="scan-result already_used">Already scanned</div>
-            <p><strong>Name:</strong> ${fullName}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Status:</strong> Already used</p>
-            <button class="button-on-dark" id="closeResult">Close</button>
+            <h2 class="card-title">Nahhh!</h2>
+            <p>
+              ${fullName}'s ticket is already scanned.
+            </p>
+            <div class="card-actions justify-end">
+              <button class="btn" id="closeResult">Close</button>
+            </div>
           `);
           wireCloseButton();
           return;
         }
 
         setResultHtml(`
-          <div class="scan-result invalid">Invalid QR code</div>
-          <p><strong>Status:</strong> Not recognized</p>
-          <button class="button-on-dark" id="closeResult">Close</button>
+          <h2 class="card-title">Naahh! Invalid QR code</h2>
+          <p>
+            This ticket is not recognized, click the button to check in. 
+            Click the close button if you change your mind.
+          </p>
+          <div class="card-actions justify-end">
+            <button class="btn" id="closeResult">Close</button>
+          </div>
         `);
         wireCloseButton();
       }
@@ -197,7 +232,12 @@
 
         await pauseScanner();
         statusEl.textContent = "Scan paused while reviewing ticket";
-        setResultHtml(`<div class="scan-result">Checking ticket...</div>`);
+        setResultHtml(`
+          <h2 class="card-title">In a minute!</h2>
+          <p>
+            Checking the QR code
+          </p>
+        `);
 
         try {
           const res = await fetch("/api/checkin", {
@@ -211,8 +251,13 @@
 
           if (res.status === 401) {
             setResultHtml(`
-              <div class="scan-result invalid">Your session expired. Please log in again.</div>
-              <button class="button-on-dark" id="goLogin">Log in</button>
+              <h2 class="card-title">Sorry..</h2>
+              <p>
+                Your session expired. Please log in again.
+              </p>
+              <div class="card-actions justify-end">
+                <button class="btn" id="goLogin">Log in</button>
+              </div>
             `);
             const loginBtn = document.getElementById("goLogin");
             if (loginBtn) {
@@ -227,8 +272,14 @@
           showPreview(data);
         } catch (err) {
           setResultHtml(`
-            <div class="scan-result invalid">Network error while checking ticket.</div>
-            <button class="button-on-dark" id="closeResult">Close</button>
+            <h2 class="card-title">Oops!</h2>
+            <p>
+              Network error while checking ticket...
+              Try again later.
+            </p>
+            <div class="card-actions justify-end">
+              <button class="btn" id="closeResult">Close</button>
+            </div>
           `);
           wireCloseButton();
         } finally {
