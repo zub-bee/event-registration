@@ -1,5 +1,5 @@
 const Database = require('better-sqlite3');
-const db = new Database('../data/app.db'); // creates file if it doesn't exist
+const db = new Database('./data/app.db'); // creates file if it doesn't exist
 
 // Good defaults for a real app
 db.pragma('journal_mode = WAL');
@@ -13,7 +13,7 @@ function createRegTable() {
     token TEXT UNIQUE NOT NULL,
     status TEXT CHECK(status IN ('unused', 'used')) DEFAULT 'unused' NOT NULL,
     createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
-    usedAt TEXT DEFAULT CURRENT_TIMESTAMP,
+    usedAt TEXT DEFAULT CURRENT_TIMESTAMP
   )
 `);
 }
@@ -22,7 +22,7 @@ function createStaffTable() {
   db.exec(`
   CREATE TABLE IF NOT EXISTS staffUsers (
     username TEXT NOT NULL,
-    passwordHash TEXT NOT NULL,
+    passwordHash TEXT NOT NULL
   )
 `)
 }
