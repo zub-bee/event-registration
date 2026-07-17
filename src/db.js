@@ -1,93 +1,102 @@
-// Very small file-based "database".
-//
-// For a 100-person event, a JSON file is more than enough and it means
-// you don't need to install/configure a real database to get started.
-// Everything is stored in data/db.json.
-//
-// When you outgrow this (bigger events, multiple servers), swap this
-// file for a real DB (Postgres/Mongo) — the rest of the app only talks
-// to the functions exported below, so nothing else needs to change.
+const Database = require('better-sqlite3');
+const db = new Database('../data/app.db'); // creates file if it doesn't exist
 
-const fs = require("fs");
-const path = require("path");
+// Good defaults for a real app
+db.pragma('journal_mode = WAL');
 
-const DB_PATH = path.join(__dirname, "..", "data", "db.json");
-
-function ensureDB() {
-  if (!fs.existsSync(DB_PATH)) {
-    const initial = { registrations: [], staffUsers: [] };
-    fs.writeFileSync(DB_PATH, JSON.stringify(initial, null, 2));
-  }
+function createRegTable() {
+  db.exec(`
+  CREATE TABLE IF NOT EXISTS registrations (
+    id TEXT PRIMARY KEY,
+    fullName TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    token TEXT UNIQUE NOT NULL,
+    status TEXT CHECK(status IN ('unused', 'used')) DEFAULT 'unused' NOT NULL,
+    createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
+    usedAt TEXT DEFAULT CURRENT_TIMESTAMP,
+  )
+`);
 }
 
-function readDB() {
-  ensureDB();
-  const raw = fs.readFileSync(DB_PATH, "utf-8");
-  return JSON.parse(raw);
+function createStaffTable() {
+  db.exec(`
+  CREATE TABLE IF NOT EXISTS staffUsers (
+    username TEXT NOT NULL,
+    passwordHash TEXT NOT NULL,
+  )
+`)
 }
 
-function writeDB(data) {
-  fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
-}
+
 
 // ---- Registrations ----
 
+createRegTable()
+createStaffTable()
+
 function getAllRegistrations() {
-  return readDB().registrations;
+  const getReg = db.prepare('SELECT fullName, email, status, createdAt, usedAt FROM registrations');
+
+  return getReg.all();
 }
 
-function getRegistrationCount() {
-  return readDB().registrations.length;
+function getCheckedInCount() {
+  const getCount = db.prepare('SELECT COUNT(id) FROM registrations WHERE status = ?');
+
+  return getCount.get("used")
 }
 
 function findByEmail(email) {
-  const db = readDB();
-  return db.registrations.find(
-    (r) => r.email.toLowerCase() === email.toLowerCase(),
-  );
+  const getUser = db.prepare('SELECT fullName FROM registrations WHERE email = ?');
+
+  return getUser.get(email);
 }
 
 function findByToken(token) {
-  const db = readDB();
-  return db.registrations.find((r) => r.token === token);
+  const getUser = db.prepare("SELECT fullName, email, status, usedAt FROM registrations WHERE token = ?");
+
+  return getUser.get(token)
+
 }
 
 function addRegistration(registration) {
-  const db = readDB();
-  db.registrations.push(registration);
-  writeDB(db);
-  return registration;
+
+  const newUser = db.prepare(`
+    INSERT INTO registrations 
+    (id, fullName, email, token, status, createdAt, usedAt)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    RETURNING *`);
+
+  const { id, fullName, email, token, status, createdAt, usedAt } = registration;
+
+  return newUser.run(id, fullName, email, token, status, createdAt, usedAt);
 }
 
 function markUsed(token) {
-  const db = readDB();
-  const reg = db.registrations.find((r) => r.token === token);
-  if (!reg) return null;
-  reg.status = "used";
-  reg.usedAt = new Date().toISOString();
-  writeDB(db);
-  return reg;
+
+  db.prepare('UPDATE registrations SET status = "used" WHERE token = ?').run(token);
+
+  return db.prepare('SELECT * FROM registrations WHERE token = ?').get(token);
+
 }
 
 // ---- Staff users (for scanner/admin login) ----
 
 function findStaffByUsername(username) {
-  const db = readDB();
-  return db.staffUsers.find(
-    (u) => u.username.toLowerCase() === username.toLowerCase(),
-  );
+  return db.prepare(`SELECT username, passwordHash FROM staffUsers WHERE username = ?`).get(username);
 }
 
 function addStaffUser(user) {
-  const db = readDB();
-  db.staffUsers.push(user);
-  writeDB(db);
-  return user;
+  const { username, passwordHash } = user;
+
+  return db.prepare("INSERT INTO staffUsers (username, passwordHash) VALUES (?, ?)").run(username, passwordHash);
 }
 
 module.exports = {
+  createStaffTable,
+  createRegTable,
   getAllRegistrations,
-  getRegistrationCount,
+  getCheckedInCount,
   findByEmail,
   findByToken,
   addRegistration,
