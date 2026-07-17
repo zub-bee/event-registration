@@ -1,5 +1,5 @@
 const Database = require('better-sqlite3');
-const db = new Database('./data/app.db'); // creates file if it doesn't exist
+const db = new Database('app.db'); // creates file if it doesn't exist
 
 // Good defaults for a real app
 db.pragma('journal_mode = WAL');
