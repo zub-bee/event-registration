@@ -27,7 +27,7 @@
                 required
               />
               <p class="stack-label">Username</p>
-              <label class="visually-hidden" for="fullName"
+              <label class="visually-hidden" for="username"
                 >Your Full Name</label
               >
             </div>
@@ -82,7 +82,7 @@
           localStorage.setItem("staffToken", data.token);
           window.location.href = "admin.html";
         } catch (err) {
-          msg.innerHTML = `<div class="message error">Network error — please try again.</div>`;
+          msg.innerHTML = `<div class="message error">Network error: please try again.</div>`;
         }
       });
     </script>
