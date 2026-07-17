@@ -1,8 +1,7 @@
 const nodemailer = require("nodemailer");
 
 // If real SMTP credentials are set in .env, we use them.
-// Otherwise we fall back to a "console transport" so you can build and
-// test the whole flow locally before you have real email credentials.
+// Otherwise we fall back to a "console transport"
 function buildTransport() {
   const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env;
 
@@ -28,7 +27,7 @@ async function sendTicketEmail({ to, fullName, qrCodeBuffer }) {
     from: process.env.EMAIL_FROM || "Event Team <no-reply@example.com>",
     to,
     subject: "Your Event Registration & Ticket QR Code",
-    text: `Hi ${fullName},\n\nYou're registered! Your QR code ticket is attached — please bring it (on your phone or printed) to be scanned at entry.\n\nSee you there!`,
+    text: `Hi ${fullName},\n\nYou're registered! Your QR code ticket is attached, please bring it (on your phone or printed) to be scanned at entry.\n\nSee you there!`,
     html: `<p>Hi ${fullName},</p><p>You're registered! Your QR code ticket is attached below — please bring it (on your phone or printed) to be scanned at entry.</p><p>See you there!</p><img src="cid:ticketqr" alt="Your QR ticket" />`,
     attachments: [
       {
@@ -39,8 +38,6 @@ async function sendTicketEmail({ to, fullName, qrCodeBuffer }) {
     ],
   });
 
-  // When using the console fallback (no real SMTP configured), log the
-  // "sent" email so you can see it worked during development.
   if (info.message) {
     console.log(`[email] (dev mode) Would send email to ${to}`);
   }

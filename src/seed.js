@@ -1,5 +1,5 @@
 // Run with: npm run seed
-// Creates (or resets) the staff login used for the scanner + admin pages.
+// Creates (or resets) the staff login used for the scanner and admin pages.
 // Reads STAFF_USERNAME / STAFF_PASSWORD from .env
 
 require("dotenv").config();
@@ -22,7 +22,7 @@ async function seed() {
 
   if (existing) {
     console.log(`Staff user "${username}" already exists — skipping.`);
-    console.log("Delete data/db.json and re-run if you want to reset everything.");
+    console.log("Delete data/app.db and re-run if you want to reset everything.");
     return;
   }
 

@@ -10,7 +10,7 @@ const adminRoutes = require("./routes/admin");
 
 if (!process.env.JWT_SECRET) {
   console.error(
-    "❌ JWT_SECRET is not set in your .env file. Copy .env.example to .env and fill it in."
+    "JWT_SECRET is not set in your .env file. Copy .env.example to .env and fill it in."
   );
   process.exit(1);
 }
