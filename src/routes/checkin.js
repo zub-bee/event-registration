@@ -4,6 +4,19 @@ const { requireAuth } = require("../middleware/auth");
 
 const router = express.Router();
 
+const CAPACITY = Number(process.env.EVENT_CAPACITY) || 100;
+
+// GET /api/status - lets the admin know if checkin is still open
+router.get("/status", (req, res) => {
+  const registered = db.getCheckedInCount();
+  res.json({
+    capacity: CAPACITY,
+    registered: registered,
+    remaining: Math.max(CAPACITY - registered, 0),
+    closed: registered >= CAPACITY,
+  });
+});
+
 // POST /api/checkin - { token }  (token = the string encoded in the QR code)
 // Requires staff to be logged in.
 router.post("/", requireAuth, (req, res) => {
@@ -11,6 +24,11 @@ router.post("/", requireAuth, (req, res) => {
 
   if (!token) {
     return res.status(400).json({ error: "Missing QR token" });
+  }
+
+  const currentCount = db.getCheckedInCount();
+  if (currentCount >= CAPACITY) {
+    return res.status(409).json({ error: "Checkin is closed, all spots are full" });
   }
 
   const registration = db.findByToken(token);
