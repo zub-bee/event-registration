@@ -6,19 +6,6 @@ const { sendTicketEmail } = require("../services/email");
 
 const router = express.Router();
 
-const CAPACITY = Number(process.env.EVENT_CAPACITY) || 100;
-
-// GET /api/status - lets the frontend know if registration is still open
-router.get("/status", (req, res) => {
-  const registered = db.getRegistrationCount();
-  res.json({
-    capacity: CAPACITY,
-    registered,
-    remaining: Math.max(CAPACITY - registered, 0),
-    closed: registered >= CAPACITY,
-  });
-});
-
 // POST /api/register - { fullName, email }
 router.post("/register", async (req, res) => {
   try {
@@ -32,13 +19,6 @@ router.post("/register", async (req, res) => {
     const basicEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!basicEmailRegex.test(emailTrimmed)) {
       return res.status(400).json({ error: "Please enter a valid email address" });
-    }
-
-    // Re-check capacity right before inserting to reduce (not eliminate)
-    // race conditions if two people submit at almost the same moment.
-    const currentCount = db.getRegistrationCount();
-    if (currentCount >= CAPACITY) {
-      return res.status(409).json({ error: "Registration is closed — all spots are full" });
     }
 
     if (db.findByEmail(emailTrimmed)) {
