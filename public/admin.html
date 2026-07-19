@@ -9,6 +9,7 @@
     <style>
       .badge {
         margin: 30px;
+        font-size: large;
       }
       .card {
         align-self: center;
@@ -81,7 +82,7 @@
 
         const data = await res.json();
         document.getElementById("summary").textContent =
-          `${data.total} / ${data.capacity} registered — ${data.checkedIn} checked in`;
+          `${data.checkedIn} out of ${data.capacity} checked in ${data.total} registered`;
 
         let count = 1;
         const rows = data.registrations
