@@ -1,39 +1,141 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Event Registration</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="output.css" />
-    <!-- <link rel="stylesheet" href="style.css" /> -->
-  </head>
-  <body>
-    <div
-      class="hero min-h-screen"
-      style="
-        background-image: url(https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.webp);
-      "
-    >
-      <div class="hero-overlay"></div>
-      <div class="glass rounded-box">
-        <div class="hero-content text-neutral-content text-center">
-          <div class="max-w-md">
-            <h1 class="mb-5 text-5xl font-bold">Hello there</h1>
-            <p class="mb-5">
-              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
-              et a id nisi.
-            </p>
-            <a href="register.html" class="btn btn-primary">Register</a>
-          </div>
-        </div>
-      </div>
+<html lang="en" data-theme="radiography">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Radiography Induction – Registration</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+          href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap"
+          rel="stylesheet"
+  />
+
+  <!-- Tailwind + daisyUI via CDN, as requested -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+
+  <style>
+    :root {
+      --mint-bg: #d6f3e0;
+      --deep-green: #2e4a22;
+      --olive-text: #566145;
+    }
+    body {
+      font-family: "Work Sans", sans-serif;
+      background-color: var(--mint-bg);
+      color: var(--deep-green);
+    }
+    .font-display {
+      font-family: "Playfair Display", serif;
+    }
+    .btn-brand {
+      background-color: var(--deep-green);
+      color: var(--mint-bg);
+      border: none;
+    }
+    .btn-brand:hover {
+      background-color: #24391b;
+      color: var(--mint-bg);
+    }
+    .btn-brand-outline {
+      background-color: transparent;
+      color: var(--deep-green);
+      border: 1.5px solid var(--deep-green);
+    }
+    .btn-brand-outline:hover {
+      background-color: var(--deep-green);
+      color: var(--mint-bg);
+    }
+  </style>
+</head>
+<body>
+<!-- NAV -->
+<nav class="border-b border-[var(--deep-green)]/15">
+  <div class="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
+    <a href="#" class="flex items-center">
+      <img src="./images/unn-logo.jpg" alt="UNN logo" class="h-14 w-14 rounded-full object-cover" />
+    </a>
+    <a href="register.html" class="btn btn-brand rounded-full px-6">Register</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="max-w-6xl mx-auto px-6 pt-16 pb-20 grid md:grid-cols-2 gap-12 items-center">
+  <div>
+    <h1 class="font-display text-5xl md:text-6xl leading-tight">
+      Welcome to the<br />Azalyion Class Of 0'25 Radiography Induction
+    </h1>
+    <p class="mt-6 text-lg max-w-md" style="color: var(--olive-text)">
+      Join us as we officially welcome the newest set of students into the Radiography Profession, University of Nigeria.
+    </p>
+    <div class="mt-8 flex flex-wrap gap-4">
+      <a href="register.html" class="btn btn-brand rounded-full px-8">RSVP now</a>
+<!--      <a href="#time-place" class="btn btn-brand-outline rounded-full px-8">Learn more</a>-->
     </div>
-  </body>
+  </div>
+
+  <div class="rounded-3xl overflow-hidden">
+    <img src="./images/unn-logo.jpg" alt="Department of Radiography" class="w-full h-full object-cover" />
+  </div>
+</header>
+
+<!-- ABOUT / FEATURE CARDS -->
+<!--<section class="max-w-6xl mx-auto px-6 pb-20">-->
+<!--  <h2 class="font-display text-3xl mb-10">About the induction</h2>-->
+<!--  <div class="grid md:grid-cols-3 gap-6">-->
+<!--    <div class="card bg-white/40 border border-[var(&#45;&#45;deep-green)]/15 rounded-2xl">-->
+<!--      <div class="card-body">-->
+<!--        <h3 class="font-display text-xl">A formal welcome</h3>-->
+<!--        <p style="color: var(&#45;&#45;olive-text)">-->
+<!--          New students are officially introduced into the department and-->
+<!--          the profession.-->
+<!--        </p>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="card bg-white/40 border border-[var(&#45;&#45;deep-green)]/15 rounded-2xl">-->
+<!--      <div class="card-body">-->
+<!--        <h3 class="font-display text-xl">Meet the faculty</h3>-->
+<!--        <p style="color: var(&#45;&#45;olive-text)">-->
+<!--          Connect with lecturers, senior students, and department staff.-->
+<!--        </p>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="card bg-white/40 border border-[var(&#45;&#45;deep-green)]/15 rounded-2xl">-->
+<!--      <div class="card-body">-->
+<!--        <h3 class="font-display text-xl">Group photograph</h3>-->
+<!--        <p style="color: var(&#45;&#45;olive-text)">-->
+<!--          A keepsake photo session to mark the start of the journey.-->
+<!--        </p>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
+<!-- TIME & PLACE -->
+<!--<section id="time-place" class="max-w-6xl mx-auto px-6 pb-24 grid md:grid-cols-2 gap-10 items-center">-->
+<!--  <div>-->
+<!--    <h2 class="font-display text-3xl mb-4">Time &amp; place</h2>-->
+<!--    <p style="color: var(&#45;&#45;olive-text)" class="mb-6">-->
+<!--    </p>-->
+<!--    <ul class="space-y-3">-->
+<!--      <li><span class="font-medium">Date:</span> To be confirmed</li>-->
+<!--      <li><span class="font-medium">Time:</span> To be confirmed</li>-->
+<!--      <li><span class="font-medium">Venue:</span> To be confirmed</li>-->
+<!--    </ul>-->
+<!--  </div>-->
+
+<!--  <div class="card bg-white/40 border border-[var(&#45;&#45;deep-green)]/15 rounded-2xl">-->
+<!--    <div class="card-body">-->
+<!--      <h3 class="font-display text-xl mb-2">Before you come</h3>-->
+<!--      <ul class="list-disc list-inside space-y-1" style="color: var(&#45;&#45;olive-text)">-->
+<!--        <li>Arrive at least 30 minutes early</li>-->
+<!--        <li>Wear the prescribed department attire</li>-->
+<!--        <li>Bring a valid means of identification</li>-->
+<!--      </ul>-->
+<!--    </div>-->
+<!--  </div>-->
+</section>
+</body>
 </html>

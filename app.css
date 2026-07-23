@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-  themes: lemonade --default;
+  themes: cupcake --default;
 }
 /* @plugin "daisyui/theme" {
   name: "lemonade";
