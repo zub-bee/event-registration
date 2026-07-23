@@ -87,8 +87,8 @@ async function addRegistration(registration) {
 
 async function markUsed(token) {
   await db.execute({
-    sql: 'UPDATE registrations SET status = "used" WHERE token = ?',
-    args: [token],
+    sql: "UPDATE registrations SET status = ? WHERE token = ?",
+    args: ["used", token],
   });
 
   const result = await db.execute({
