@@ -149,20 +149,6 @@
 
           const data = await res.json();
           if (!res.ok) {
-            if (res.status === 409) {
-              setResultHtml(`
-                <h2 class="card-title">Oops!</h2>
-                <p>
-                  Checked in: ${escapeHtml(data.fullName)} (${escapeHtml(data.email || "no-email")})
-                </p>
-                <div class="card-actions justify-end">
-                  <button class="btn" id="closeResult">Scan Next</button>
-                </div>
-              `);
-              wireCloseButton();
-              return;
-            }
-
             setResultHtml(
               `<h2 class="card-title">Sorry!</h2>
               <p>
@@ -172,6 +158,18 @@
             wireCloseButton();
             return;
           }
+
+          setResultHtml(`
+                <h2 class="card-title">Success!</h2>
+                <p>
+                  Checked in: ${escapeHtml(data.fullName)} (${escapeHtml(data.email || "no-email")})
+                </p>
+                <div class="card-actions justify-end">
+                  <button class="btn" id="closeResult">Scan Next</button>
+                </div>
+              `);
+          wireCloseButton();
+          return;
         } catch (err) {
           setResultHtml(`
             <h2 class="card-title">Sorry!</h2>
@@ -194,7 +192,7 @@
           setResultHtml(`
             <h2 class="card-title">Success!</h2>
             <p>
-              ${fullName}'s ticket is valid, click the button to check in. 
+              <strong>${fullName}</strong>'s ticket is valid, click the button to check in. 
               Click the close button if you change your mind.
             </p>
             <div class="card-actions justify-end">
@@ -313,7 +311,8 @@
             statusEl.textContent = "Point camera at a QR code";
           })
           .catch((err) => {
-            statusEl.textContent = "Could not start camera. Please allow camera permissions";
+            statusEl.textContent =
+              "Could not start camera. Please allow camera permissions";
           });
       }
     </script>

@@ -63,7 +63,7 @@ router.post("/", requireAuth, async (req, res) => {
 
   const updated = await db.markUsed(token);
 
-  res.json({
+  return res.json({
     result: "checked_in",
     message: "Check-in successful",
     fullName: updated.fullName,
