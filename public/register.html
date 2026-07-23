@@ -91,25 +91,24 @@
             body: JSON.stringify({ fullName, email }),
           });
           const data = await res.json();
+          console.log(data);
 
           if (!res.ok) {
             showMessage(data.error || "Something went wrong.", "error");
             submitBtn.disabled = false;
-            submitBtn.querySelector(".stack-label").textContent =
-              "Get Your Invite";
-            submitBtn.querySelector(".stack-value").textContent =
-              "Check your email address";
+            submitBtn.innerHTML = `
+            <p class="stack-label" style="font-size: 1.125rem">
+                Get Your Invite
+            </p>
+            <span class="stack-value">Check your email address</span>
+            `;
             return;
           }
 
           window.location.href = "success.html";
         } catch (err) {
-          showMessage("Network error — please try again.", "error");
+          showMessage("Network error, please try again.", "error");
           submitBtn.disabled = false;
-          submitBtn.querySelector(".stack-label").textContent =
-            "Get Your Invite";
-          submitBtn.querySelector(".stack-value").textContent =
-            "Check your email address";
         }
       });
     </script>
