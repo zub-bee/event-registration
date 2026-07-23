@@ -22,19 +22,10 @@
   </head>
   <body>
     <div>
-      <!-- <p style="margin-top: 16px">
-        <a href="login.html" style="margin: 10px"> Logout </a>
-        <a
-          href="scanner.html"
-          class="button-on-dark button-on-dark--dark-subtle"
-        >
-          <span class="button-on-dark__label">Scan QR codes</span>
-        </a>
-      </p> -->
       <div class="navbar bg-base-100 shadow-sm.flex">
         <div class="navbar-start">
           <a class="btn btn-ghost text-xl hero-section__title"
-            >Admin Dashboard</a
+            >Admin <br />Dashboard</a
           >
         </div>
         <div class="navbar-end">
@@ -82,7 +73,7 @@
 
         const data = await res.json();
         document.getElementById("summary").textContent =
-          `${data.checkedIn} out of ${data.capacity} checked in ${data.total} registered`;
+          `${data.checkedIn} out of ${data.capacity} checked in ....... ${data.total} registered`;
 
         let count = 1;
         const rows = data.registrations
@@ -91,7 +82,7 @@
         <tr>
           <th>${count++}</th>
           <td>${r.fullName}</td>
-          <td><span class="status ${r.status === "used" ? "status-primary" : "status-secondary"} animate-ping"></span>${r.status === "used" ? "Checked in" : "Invited"}</td>
+          <td>${r.status === "used" ? "Checked in" : "Invited"}</td>
         </tr>
       `,
           )
