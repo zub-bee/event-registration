@@ -12,17 +12,23 @@ router.post("/register", async (req, res) => {
     const { fullName, email } = req.body;
 
     if (!fullName || !fullName.trim() || !email || !email.trim()) {
-      return res.status(400).json({ error: "Full name and email are required" });
+      return res
+        .status(400)
+        .json({ error: "Full name and email are required" });
     }
 
     const emailTrimmed = email.trim();
     const basicEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!basicEmailRegex.test(emailTrimmed)) {
-      return res.status(400).json({ error: "Please enter a valid email address" });
+      return res
+        .status(400)
+        .json({ error: "Please enter a valid email address" });
     }
 
-    if (db.findByEmail(emailTrimmed)) {
-      return res.status(409).json({ error: "This email has already registered" });
+    if (await db.findByEmail(emailTrimmed)) {
+      return res
+        .status(409)
+        .json({ error: "This email has already been registered" });
     }
 
     const token = uuidv4();
@@ -36,7 +42,7 @@ router.post("/register", async (req, res) => {
       usedAt: null,
     };
 
-    db.addRegistration(registration);
+    await db.addRegistration(registration);
 
     const qrCodeBuffer = await generateQRCodeBuffer(token);
     await sendTicketEmail({

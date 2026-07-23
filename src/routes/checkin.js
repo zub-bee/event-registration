@@ -19,19 +19,21 @@ router.get("/status", (req, res) => {
 
 // POST /api/checkin - { token }  (token = the string encoded in the QR code)
 // Requires staff to be logged in.
-router.post("/", requireAuth, (req, res) => {
+router.post("/", requireAuth, async (req, res) => {
   const { token, confirm = false } = req.body;
 
   if (!token) {
     return res.status(400).json({ error: "Missing QR token" });
   }
 
-  const currentCount = db.getCheckedInCount();
+  const currentCount = await db.getCheckedInCount();
   if (currentCount >= CAPACITY) {
-    return res.status(409).json({ error: "Checkin is closed, all spots are full" });
+    return res
+      .status(409)
+      .json({ error: "Checkin is closed, all spots are full" });
   }
 
-  const registration = db.findByToken(token);
+  const registration = await db.findByToken(token);
 
   if (!registration) {
     return res.status(404).json({
@@ -59,7 +61,7 @@ router.post("/", requireAuth, (req, res) => {
     });
   }
 
-  const updated = db.markUsed(token);
+  const updated = await db.markUsed(token);
 
   res.json({
     result: "checked_in",

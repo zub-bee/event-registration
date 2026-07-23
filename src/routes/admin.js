@@ -7,8 +7,8 @@ const router = express.Router();
 const CAPACITY = Number(process.env.EVENT_CAPACITY) || 100;
 
 // GET /api/admin/registrations - full list and summary counts
-router.get("/registrations", requireAuth, (req, res) => {
-  const registrations = db.getAllRegistrations();
+router.get("/registrations", requireAuth, async (req, res) => {
+  const registrations = await db.getAllRegistrations();
   const usedCount = registrations.filter((r) => r.status === "used").length;
 
   res.json({

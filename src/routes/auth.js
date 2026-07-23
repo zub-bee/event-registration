@@ -11,10 +11,12 @@ router.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.status(400).json({ error: "Username and password are required" });
+    return res
+      .status(400)
+      .json({ error: "Username and password are required" });
   }
 
-  const user = db.findStaffByUsername(username);
+  const user = await db.findStaffByUsername(username);
   if (!user) {
     return res.status(401).json({ error: "Invalid username or password" });
   }
@@ -24,11 +26,9 @@ router.post("/login", async (req, res) => {
     return res.status(401).json({ error: "Invalid username or password" });
   }
 
-  const token = jwt.sign(
-    { username: user.username },
-    process.env.JWT_SECRET,
-    { expiresIn: "30m" }
-  );
+  const token = jwt.sign({ username: user.username }, process.env.JWT_SECRET, {
+    expiresIn: "30m",
+  });
 
   res.json({ token });
 });

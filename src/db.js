@@ -1,11 +1,11 @@
-const Database = require('better-sqlite3');
-const db = new Database('app.db'); // creates file if it doesn't exist
+const { createClient } = require("@libsql/client");
+const db = createClient({
+  url: process.env.TURSO_DATABASE_URL,
+  authToken: process.env.TURSO_AUTH_TOKEN,
+});
 
-// Good defaults for a real app
-db.pragma('journal_mode = WAL');
-
-function createRegTable() {
-  db.exec(`
+async function createRegTable() {
+  await db.execute(`
   CREATE TABLE IF NOT EXISTS registrations (
     id TEXT PRIMARY KEY,
     fullName TEXT NOT NULL,
@@ -18,83 +18,109 @@ function createRegTable() {
 `);
 }
 
-function createStaffTable() {
-  db.exec(`
+async function createStaffTable() {
+  await db.execute(`
   CREATE TABLE IF NOT EXISTS staffUsers (
     username TEXT NOT NULL,
     passwordHash TEXT NOT NULL
   )
-`)
+`);
 }
-
-
 
 // ---- Registrations ----
 
-createRegTable()
-createStaffTable()
+async function init() {
+  await createRegTable();
+  await createStaffTable();
+}
+init();
 
-function getAllRegistrations() {
-  const getReg = db.prepare('SELECT fullName, email, status, createdAt, usedAt FROM registrations');
+async function getAllRegistrations() {
+  const result = await db.execute(
+    "SELECT fullName, email, status, createdAt, usedAt FROM registrations",
+  );
 
-  return getReg.all();
+  return result.rows;
 }
 
-function getCheckedInCount() {
-  const getCount = db.prepare('SELECT COUNT(id) FROM registrations WHERE status = ?');
+async function getCheckedInCount() {
+  const result = await db.execute({
+    sql: "SELECT COUNT(id) FROM registrations WHERE status = ?",
+    args: ["used"],
+  });
 
-  return getCount.get("used")
+  return result.rows[0];
 }
 
-function findByEmail(email) {
-  const getUser = db.prepare('SELECT fullName FROM registrations WHERE email = ?');
+async function findByEmail(email) {
+  const result = await db.execute({
+    sql: "SELECT fullName FROM registrations WHERE email = ?",
+    args: [email],
+  });
 
-  return getUser.get(email);
+  return result.rows[0];
 }
 
-function findByToken(token) {
-  const getUser = db.prepare("SELECT fullName, email, status, usedAt FROM registrations WHERE token = ?");
+async function findByToken(token) {
+  const result = await db.execute({
+    sql: "SELECT fullName, email, status, usedAt FROM registrations WHERE token = ?",
+    args: [token],
+  });
 
-  return getUser.get(token)
-
+  return result.rows[0];
 }
 
-function addRegistration(registration) {
+async function addRegistration(registration) {
+  const { id, fullName, email, token, status, createdAt, usedAt } =
+    registration;
 
-  const newUser = db.prepare(`
-    INSERT INTO registrations 
+  const result = await db.execute({
+    sql: `INSERT INTO registrations 
     (id, fullName, email, token, status, createdAt, usedAt)
     VALUES (?, ?, ?, ?, ?, ?, ?)
-    RETURNING *`);
+    RETURNING *`,
+    args: [id, fullName, email, token, status, createdAt, usedAt],
+  });
 
-  const { id, fullName, email, token, status, createdAt, usedAt } = registration;
-
-  return newUser.run(id, fullName, email, token, status, createdAt, usedAt);
+  return result.rows[0];
 }
 
-function markUsed(token) {
+async function markUsed(token) {
+  await db.execute({
+    sql: 'UPDATE registrations SET status = "used" WHERE token = ?',
+    args: [token],
+  });
 
-  db.prepare('UPDATE registrations SET status = "used" WHERE token = ?').run(token);
+  const result = await db.execute({
+    sql: "SELECT * FROM registrations WHERE token = ?",
+    args: [token],
+  });
 
-  return db.prepare('SELECT * FROM registrations WHERE token = ?').get(token);
-
+  return result.rows[0];
 }
 
 // ---- Staff users (for scanner/admin login) ----
 
-function findStaffByUsername(username) {
-  return db.prepare(`SELECT username, passwordHash FROM staffUsers WHERE username = ?`).get(username);
+async function findStaffByUsername(username) {
+  const result = await db.execute({
+    sql: "SELECT username, passwordHash FROM staffUsers WHERE username = ?",
+    args: [username],
+  });
+
+  return result.rows[0];
 }
 
-function addStaffUser(user) {
+async function addStaffUser(user) {
   const { username, passwordHash } = user;
 
-  return db.prepare("INSERT INTO staffUsers (username, passwordHash) VALUES (?, ?)").run(username, passwordHash);
+  return db.execute({
+    sql: "INSERT INTO staffUsers (username, passwordHash) VALUES (?, ?)",
+    args: [username, passwordHash],
+  });
 }
 
 module.exports = {
-  createStaffTable,
-  createRegTable,
+  init,
   getAllRegistrations,
   getCheckedInCount,
   findByEmail,
