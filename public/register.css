@@ -1,11 +1,16 @@
 :root {
+  --panel-ink: #0d3b47;
+  --page-text: #082930;
+  --panel-accent: #106f7e;
+  --muted: #c7ebf0;
+  --panel-border: #7bcbda;
   --page-bg: #ffffff;
   --panel-border: #7d9276;
-  --panel-ink: #506349;
-  --panel-accent: #2e4f21;
-  --panel-accent-soft: #d5e4d0;
-  --page-text: #2e4f21;
-  --muted: #60725c;
+  /* --panel-ink: #506349; */
+  /* --panel-accent: #2e4f21; */
+  /* --panel-accent-soft: #d5e4d0; */
+  --page-text: #082930;
+  /* --muted: #60725c; */
   --shadow: inset 0 4px 4px rgba(0, 0, 0, 0.08);
 }
 
@@ -105,7 +110,7 @@ c .register-shell {
     sans-serif;
   margin: 0;
   max-width: 52ch;
-  color: var(--muted);
+  color: var(--page-text);
   font-size: 1rem;
   line-height: 1.6;
 }
@@ -180,7 +185,7 @@ c .register-shell {
 }
 
 .stack-submit:hover {
-  background: #355e28;
+  background: #106f7e;
   transform: translateY(-1px);
 }
 
