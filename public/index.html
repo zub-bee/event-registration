@@ -286,6 +286,13 @@
         margin: 6px 28px 26px;
       }
 
+      .flyer__button {
+        position: relative;
+        display: flex;
+        gap: 0;
+        margin: 6px 28px 26px;
+      }
+
       .tag {
         display: inline-flex;
         align-items: center;
@@ -325,6 +332,14 @@
         border: none;
         cursor: pointer;
         width: fit-content;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      .flyer__badge div {
+        margin-top: 3rem;
       }
 
       .flyer__theme {
@@ -489,17 +504,14 @@
         flex-shrink: 0;
       }
 
-      /* ---------- Badge (shield / cap / 20th) ---------- */
-      .badge-svg {
-        width: 100%;
-        height: auto;
-        display: block;
-      }
-
       /* ---------- Responsive ---------- */
       @media (max-width: 680px) {
         .header__text_grad {
-          margin: 0 0 0 0.95rem;
+          margin: 0 0 0 1.2rem;
+        }
+
+        .flyer__badge div {
+          margin: 0;
         }
 
         .flyer__header {
@@ -518,6 +530,9 @@
         }
         .flyer__badge {
           width: 150px;
+        }
+        .flyer__hero {
+          margin: 0;
         }
         .flyer__hero-text h1 {
           font-size: 30px;
@@ -569,12 +584,9 @@
             COLLEGE OF MEDICINE
           </p>
           <p class="header__top_down">UNIVERSITY OF NIGERIA ENUGU CAMPUS</p>
-          <!-- <p class="faculty">Faculty of Health Sciences and Technology</p>
-          <p class="college">College of Medicine</p>
-          <p class="university">University of Nigeria, Enugu Campus</p> -->
-        </div>
 
-        <img class="flyer__logo" src="images/rad-logo.jpeg" />
+          <img class="flyer__logo" src="images/rad-logo.jpeg" />
+        </div>
       </header>
 
       <!-- Hero -->
@@ -584,7 +596,7 @@
           <p class="header__text_grad">20th</p>
         </div>
 
-        <div style="margin-top: 3rem">
+        <div>
           <p class="header__text">cordially invites you to her</p>
           <h1 class="header__title">Induction / Oath<br />Taking Ceremony</h1>
           <p class="header__text">of her 2024/2025 Graduands</p>
@@ -611,12 +623,16 @@
         </div>
       </section>
 
-      <section class="flyer__info" style="justify-content: center">
+      <section
+        class="flyer__button"
+        style="justify-content: center; align-items: flex-end"
+      >
         <button id="view">VIEW INFO</button>
 
-        <a href="register.html">
-          <button>RSVP</button>
-        </a>
+        <button id="register">
+          <!-- <a href="register.html">RSVP</a> -->
+          RSVP
+        </button>
       </section>
 
       <!-- Bottom panel -->
@@ -746,6 +762,7 @@
     <script>
       const viewEl = document.getElementById("view");
       const infoEl = document.getElementById("flyer__panel");
+      const registerEl = document.getElementById("register");
 
       viewEl.addEventListener("click", () => {
         if (infoEl.style.display === "none") {
@@ -753,6 +770,10 @@
         } else {
           infoEl.style.display = "none"; // Hides the element
         }
+      });
+
+      registerEl.addEventListener("click", () => {
+        window.location.href = "register.html";
       });
     </script>
   </body>
