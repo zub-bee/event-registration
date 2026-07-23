@@ -157,10 +157,9 @@
         line-height: normal;
         margin: 0 0 0 0.75rem;
 
-        /* align-items: center; */
         position: absolute;
-        top: 50%; /* Positions the text from the top */
-        left: 50%; /* Positions the text from the left */
+        top: 50%;
+        left: 50%;
         transform: translate(-50%, -50%);
       }
 
@@ -499,6 +498,10 @@
 
       /* ---------- Responsive ---------- */
       @media (max-width: 680px) {
+        .header__text_grad {
+          margin: 0 0 0 0.95rem;
+        }
+
         .flyer__header {
           flex-direction: column;
           gap: 10px;
@@ -550,33 +553,6 @@
     </style>
   </head>
   <body>
-    <!-- <div class="flyer-container">
-      <div class="header">
-        <p class="header__top_up">
-          DEPARTMENT OF MEDICAL RADIOGRAPHY AND RADIOLOGICAL SCIENCES
-          <br />
-          FACULTY OF HEALTH SCIENCES AND TECHNOLOGY
-          <br />
-          COLLEGE OF MEDICINE
-        </p>
-        <p class="header__top_down">UNIVERSITY OF NIGERIA ENUGU CAMPUS</p>
-        <div class="title">
-          <div class="grad__img">
-            <p class="header__text_grad">20th</p>
-          </div>
-          <div>
-            <p class="header__text">cordially invites you to her</p>
-            <p class="header__title">
-              INDUCTION/OATH <br />
-              TAKING CEREMONY
-            </p>
-            <p class="header__text" style="font-size: 1.8125rem">
-              of her 2024/2025 Graduands
-            </p>
-          </div>
-        </div>
-      </div>
-    </div> -->
     <div class="flyer__container flyer">
       <div class="flyer__decor"></div>
 
