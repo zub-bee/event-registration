@@ -5,7 +5,7 @@
   "main": "src/server.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node src/seed.js; node src/server.js",
+    "start": "node src/server.js",
     "dev": "node --watch src/server.js",
     "seed": "node src/seed.js",
     "build:css": "npx @tailwindcss/cli -i app.css -o public/output.css"
