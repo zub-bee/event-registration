@@ -15,7 +15,7 @@ function buildTransport() {
   }
 
   console.warn(
-    "[email] No SMTP_HOST/SMTP_USER/SMTP_PASS set in .env — emails will be logged to the console instead of actually sent. See .env.example."
+    "[email] No SMTP_HOST/SMTP_USER/SMTP_PASS set in .env — emails will be logged to the console instead of actually sent. See .env.example.",
   );
   return nodemailer.createTransport({ jsonTransport: true });
 }
@@ -28,7 +28,7 @@ async function sendTicketEmail({ to, fullName, qrCodeBuffer }) {
     to,
     subject: "Your Event Registration & Ticket QR Code",
     text: `Hi ${fullName},\n\nYou're registered! Your QR code ticket is attached, please bring it (on your phone or printed) to be scanned at entry.\n\nSee you there!`,
-    html: `<p>Hi ${fullName},</p><p>You're registered! Your QR code ticket is attached below — please bring it (on your phone or printed) to be scanned at entry.</p><p>See you there!</p><img src="cid:ticketqr" alt="Your QR ticket" />`,
+    html: `<p>Hi ${fullName},</p><p>You're registered! Your QR code ticket is attached below, please bring it (on your phone or printed) to be scanned at entry.</p><p>See you there!</p><img src="cid:ticketqr" alt="Your QR ticket" />`,
     attachments: [
       {
         filename: "ticket-qr.png",
