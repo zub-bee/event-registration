@@ -18,11 +18,11 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
-    "nodemailer": "^6.9.14",
+    "nodemailer": "^10.0.10",
     "postcss": "^8.5.19",
     "qrcode": "^1.5.3",
     "tailwindcss": "^4.3.2",
-    "uuid": "^9.0.1"
+    "uuid": "^14.0.2"
   },
   "devDependencies": {
     "daisyui": "^5.6.18"
