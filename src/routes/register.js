@@ -1,5 +1,4 @@
 const express = require("express");
-const { v4: uuidv4 } = require("uuid");
 const db = require("../db");
 const { generateQRCodeBuffer } = require("../services/qrcode");
 const { sendTicketEmail } = require("../services/email");
@@ -31,9 +30,9 @@ router.post("/register", async (req, res) => {
         .json({ error: "This email has already been registered" });
     }
 
-    const token = uuidv4();
+    const token = crypto.randomUUID();
     const registration = {
-      id: uuidv4(),
+      id: crypto.randomUUID(),
       fullName: fullName.trim(),
       email: emailTrimmed,
       token,
